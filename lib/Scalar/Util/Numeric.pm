@@ -1,25 +1,22 @@
 package Scalar::Util::Numeric;
 
-use 5.006;
+use 5.008000;
 
 use strict;
 use warnings;
 
-require Exporter;
-require DynaLoader;
-use AutoLoader 'AUTOLOAD';
+use base qw(Exporter);
+use XSLoader;
 
-our @ISA = qw(Exporter DynaLoader);
+our $VERSION = '0.10';
 
 our %EXPORT_TAGS = (
-'all'	=> [ qw(isbig isfloat isinf isint isnan isneg isnum isuv) ],
+    'all' => [ qw(isbig isfloat isinf isint isnan isneg isnum isuv) ],
 );
 
 our @EXPORT_OK = ( map { @$_ } values %EXPORT_TAGS );
 
-our $VERSION = '0.02';
-
-bootstrap Scalar::Util::Numeric $VERSION;
+XSLoader::load(__PACKAGE__, $VERSION);
 
 1;
 
@@ -27,7 +24,7 @@ __END__
 
 =head1 NAME
 
-Scalar::Util::Numeric - numeric tests for Perl datatypes
+Scalar::Util::Numeric - numeric tests for Perl scalars
 
 =head1 SYNOPSIS
 
@@ -50,15 +47,13 @@ returns the numeric type of its argument, or 0 if it isn't numeric.
 
 All of the functions exported by Scalar::Util::Numeric can be imported by using the C<:all> tag:
 
-	use Scalar::Util::Numeric qw(:all);
+    use Scalar::Util::Numeric qw(:all);
 
-=head1 isnum
+=head1 EXPORTS
 
-=head3 usage
+=head2 isnum
 
     isnum ($val)
-
-=head3 description
 
 Returns a nonzero value (indicating the numeric type) if $val is a number.
 
@@ -86,55 +81,37 @@ it's 0 or a positive integer, and 0 otherwise.
 
 The others always return 1 or 0.
 
-=cut
-
-sub isnum ($) {
-    return 0 unless defined (my $val = shift);
-    # stringify - ironically, looks_like_number always returns 1 unless
-    # arg is a string
-    return is_num($val . '');
-}
-
-sub isint ($) {
-    my $isnum = isnum(shift());
-    return ($isnum == 1) ? 1 : ($isnum == 9) ? -1 : 0;
-}
-
-sub isuv ($) {
-    return (isnum(shift()) & 1) ? 1 : 0;
-}
-
-sub isbig ($) {
-    return (isnum(shift()) & 2) ? 1 : 0;
-}
-
-sub isfloat ($) {
-    return (isnum(shift()) & 4) ? 1 : 0;
-}
-
-sub isneg ($) {
-    return (isnum(shift()) & 8) ? 1 : 0;
-}
-
-sub isinf ($) {
-    return (isnum(shift()) & 16) ? 1 : 0;
-}
-
-sub isnan ($) {
-    return (isnum(shift()) & 32) ? 1 : 0;
-}
-
 =head1 SEE ALSO
 
-L<Scalar::Util>
+=over
 
-=head1 AUTHOR
+=item * L<autobox/type>
 
-chocolateboy: <chocolate.boy@email.com>
+=item * L<Data::Types>
+
+=item * L<Params::Classify>
+
+=item * L<Params::Util>
+
+=item * L<Scalar::Util>
+
+=item * L<String::Numeric>
+
+=back
+
+=head1 AUTHORS
+
+=over
+
+=item * chocolateboy <chocolate@cpan.org>
+
+=item * Michael G Schwern <schwern@pobox.com>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2005, chocolateboy.
+Copyright (c) 2005-2010, chocolateboy.
 
 This module is free software. It may be used, redistributed
 and/or modified under the same terms as Perl itself.
