@@ -9,3 +9,4 @@ ppport.h
 README
 t/all.t
 t/pod.t
+META.json                                Module JSON meta-data (added by MakeMaker)
